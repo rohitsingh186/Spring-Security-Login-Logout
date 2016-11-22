@@ -58,7 +58,7 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 	@Override
 	public void resetFailAttempts(String username) {
 		
-		String resetUserAttempts = "UPDATE USER_ATTEMPTS SET attempts = 0, lastmodified = null WHERE username = ?";
+		String resetUserAttempts = "UPDATE USER_ATTEMPTS SET attempts = 0, lastmodified = ? WHERE username = ?";
 
 		Connection dbConnection;
 		try {
@@ -66,7 +66,8 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 
 			try (PreparedStatement resetUserAttemptsSt = dbConnection.prepareStatement(resetUserAttempts)) {
 
-				resetUserAttemptsSt.setString(1, username);
+				resetUserAttemptsSt.setDate(1, CustomDateFormatter.utilToSqlDate(new Date()));
+				resetUserAttemptsSt.setString(2, username);
 				resetUserAttemptsSt.executeUpdate();
 
 			}
@@ -189,11 +190,12 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 		try {
 
 			Connection dbConnection = dataSource.getConnection();
-			String userExitsQuery = "SELECT count(*) as userCount from users where username = " + username;
+			String userExitsQuery = "SELECT count(*) as userCount from users where username = ?";
 			System.out.println(userExitsQuery);
 
 			try (PreparedStatement userExitsSt = dbConnection.prepareStatement(userExitsQuery)) {
 
+				userExitsSt.setString(1, username);
 				ResultSet rs = userExitsSt.executeQuery();
 				int count;
 

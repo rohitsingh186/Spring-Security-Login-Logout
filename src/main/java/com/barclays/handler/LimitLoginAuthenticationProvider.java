@@ -18,8 +18,11 @@ import com.barclays.users.model.UserAttempts;
 @Component("authenticationProvider")
 public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider {
 
-	@Autowired
 	private UserDetailsDao userDetailsDao;
+
+	public void setUserDetailsDao(UserDetailsDao userDetailsDao) {
+		this.userDetailsDao = userDetailsDao;
+	}
 
 	@Autowired
 	@Qualifier("userDetailsService")
