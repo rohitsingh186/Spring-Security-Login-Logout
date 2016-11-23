@@ -25,7 +25,7 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 	@Override
 	public void updateFailAttempts(String username) {
 
-		System.out.println("updating user fail attempts");
+		System.out.println("updating user fail attempts for username: " + username);
 
 		UserAttempts userAttempts = getUserAttempts(username);
 
@@ -51,12 +51,12 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 
 		}
 
-		System.out.println("updated user fail attempts");
-
 	}
 
 	@Override
 	public void resetFailAttempts(String username) {
+		
+		System.out.println("reseting user fail attempts for username: " + username);
 		
 		String resetUserAttempts = "UPDATE USER_ATTEMPTS SET attempts = 0, lastmodified = ? WHERE username = ?";
 
@@ -121,6 +121,8 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 	}
 
 	private void lockUser(String username) {
+		
+		System.out.println("locking the user for username: " + username);
 
 		String lockUser = "UPDATE users SET accountNonLocked = ? WHERE username = ?";
 
@@ -143,16 +145,19 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 
 	@Override
 	public UserAttempts getUserAttempts(String username) {
+		
+		System.out.println("getting user fail attempts for username: " + username);
 
 		UserAttempts userAttempts = null;
 
 		try {
 
 			Connection dbConnection = dataSource.getConnection();
-			String userAttemptsSelectQuery = "SELECT * from user_attempts";
+			String userAttemptsSelectQuery = "SELECT * from user_attempts where username = ?";
 
 			try (PreparedStatement userAttemptsSelectSt = dbConnection.prepareStatement(userAttemptsSelectQuery)) {
 
+				userAttemptsSelectSt.setString(1, username);
 				ResultSet rs = userAttemptsSelectSt.executeQuery();
 				int id;
 				String usernameDb;
@@ -184,6 +189,8 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 	}
 
 	private boolean isUserExists(String username) {
+		
+		System.out.println("checking user's existance for username: " + username);
 
 		boolean userExitsFlag = false;
 
@@ -191,7 +198,6 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 
 			Connection dbConnection = dataSource.getConnection();
 			String userExitsQuery = "SELECT count(*) as userCount from users where username = ?";
-			System.out.println(userExitsQuery);
 
 			try (PreparedStatement userExitsSt = dbConnection.prepareStatement(userExitsQuery)) {
 
