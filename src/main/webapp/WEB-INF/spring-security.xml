@@ -41,11 +41,15 @@
 	<beans:bean id="userDetailsDao" class="com.barclays.users.dao.UserDetailsDaoImpl">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
+	
+	<beans:bean id="encoder"
+		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
 	<beans:bean id="authenticationProvider"
 		class="com.barclays.handler.LimitLoginAuthenticationProvider">
 		<beans:property name="userDetailsService" ref="customUserDetailsService" />
 		<beans:property name="userDetailsDao" ref="userDetailsDao" />
+		<beans:property name="passwordEncoder" ref="encoder" />
 	</beans:bean>
 
 	<authentication-manager>

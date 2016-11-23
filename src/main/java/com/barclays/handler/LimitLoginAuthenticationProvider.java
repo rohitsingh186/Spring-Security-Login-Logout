@@ -10,6 +10,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.barclays.users.dao.UserDetailsDao;
@@ -24,6 +25,10 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
 		this.userDetailsDao = userDetailsDao;
 	}
 
+	public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+		super.setPasswordEncoder(passwordEncoder);
+	}
+	
 	@Autowired
 	@Qualifier("userDetailsService")
 	@Override
