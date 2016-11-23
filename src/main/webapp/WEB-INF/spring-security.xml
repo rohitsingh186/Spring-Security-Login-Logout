@@ -11,12 +11,20 @@
 
 		<!-- access denied page -->
 		<access-denied-handler error-page="/403" />
-		<form-login login-page="/login" default-target-url="/welcome"
-			authentication-failure-url="/login?error" username-parameter="username"
-			password-parameter="password" />
-		<logout logout-success-url="/login?logout" />
+		<form-login login-page="/login" 
+			default-target-url="/welcome"
+			authentication-failure-url="/login?error"
+			username-parameter="username"
+			password-parameter="password"
+			login-processing-url="/auth/login_check"
+			authentication-success-handler-ref="savedRequestAwareAuthenticationSuccessHandler" />
+			
+		<logout logout-success-url="/login?logout" delete-cookies="JSESSIONID" />
 		<!-- enable csrf protection -->
 		<csrf />
+
+		<remember-me token-validity-seconds="1209600"
+			remember-me-parameter="remember-me" data-source-ref="dataSource" />
 	</http>
 
 	<beans:bean id="customUserDetailsService"
@@ -25,6 +33,8 @@
 			value="select * from users where username = ?" />
 		<beans:property name="authoritiesByUsernameQuery"
 			value="select username, role from roles where username =?" />
+		<!-- If this is specified, “Persistent Token Approach” will be used. -->
+		<!-- Defaults to “Simple Hash-Based Token Approach” -->
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
 
