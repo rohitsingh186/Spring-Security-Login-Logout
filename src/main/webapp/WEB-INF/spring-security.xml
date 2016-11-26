@@ -26,16 +26,15 @@
 		<remember-me token-validity-seconds="1209600"
 			remember-me-parameter="remember-me" data-source-ref="dataSource" />
 	</http>
+	
+	<beans:bean id="userDao"
+		class="com.barclays.users.dao.UserDaoImpl">
+		<beans:property name="sessionFactory" ref="sessionFactory" />
+	</beans:bean>
 
-	<beans:bean id="customUserDetailsService"
-		class="com.barclays.users.service.CustomUserDetailsService">
-		<beans:property name="usersByUsernameQuery"
-			value="select * from users where username = ?" />
-		<beans:property name="authoritiesByUsernameQuery"
-			value="select username, role from roles where username =?" />
-		<!-- If this is specified, “Persistent Token Approach” will be used. -->
-		<!-- Defaults to “Simple Hash-Based Token Approach” -->
-		<beans:property name="dataSource" ref="dataSource" />
+	<beans:bean id="userDetailsService"
+		class="com.barclays.users.service.MyUserDetailsService">
+		<beans:property name="userDao" ref="userDao" />
 	</beans:bean>
 
 	<beans:bean id="userDetailsDao" class="com.barclays.users.dao.UserDetailsDaoImpl">
@@ -47,7 +46,7 @@
 
 	<beans:bean id="authenticationProvider"
 		class="com.barclays.handler.LimitLoginAuthenticationProvider">
-		<beans:property name="userDetailsService" ref="customUserDetailsService" />
+		<beans:property name="userDetailsService" ref="userDetailsService" />
 		<beans:property name="userDetailsDao" ref="userDetailsDao" />
 		<beans:property name="passwordEncoder" ref="encoder" />
 	</beans:bean>

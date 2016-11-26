@@ -25,7 +25,8 @@
 		<param-value>
 			/WEB-INF/spring-security.xml,
 			/WEB-INF/spring-database.xml,
-			/WEB-INF/my-beans.xml
+			/WEB-INF/my-beans.xml,
+			/WEB-INF/hibernate-beans.xml
 		</param-value>
 	</context-param>
 
